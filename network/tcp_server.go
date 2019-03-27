@@ -24,16 +24,12 @@ type TCPServer struct {
 	MinMsgLen    uint32
 	MaxMsgLen    uint32
 	LittleEndian bool
-	msgParser    MsgParserI
+	MsgParser    MsgParserI
 }
 
 func (server *TCPServer) Start() {
 	server.init()
 	go server.run()
-}
-
-func (server *TCPServer) SetMsgParser(p MsgParserI) {
-	server.msgParser = p
 }
 
 func (server *TCPServer) init() {
@@ -58,11 +54,11 @@ func (server *TCPServer) init() {
 	server.conns = make(ConnSet)
 
 	// msg parser
-	if server.msgParser == nil {
+	if server.MsgParser == nil {
 		msgParser := NewMsgParser()
 		msgParser.SetMsgLen(server.LenMsgLen, server.MinMsgLen, server.MaxMsgLen)
 		msgParser.SetByteOrder(server.LittleEndian)
-		server.msgParser = msgParser
+		server.MsgParser = msgParser
 	}
 }
 
@@ -103,7 +99,7 @@ func (server *TCPServer) run() {
 
 		server.wgConns.Add(1)
 
-		tcpConn := newTCPConn(conn, server.PendingWriteNum, server.msgParser)
+		tcpConn := newTCPConn(conn, server.PendingWriteNum, server.MsgParser)
 		agent := server.NewAgent(tcpConn)
 		go func() {
 			agent.Run()
