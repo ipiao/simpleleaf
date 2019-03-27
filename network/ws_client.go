@@ -1,11 +1,11 @@
 package network
 
 import (
-	"log"
 	"sync"
 	"time"
 
 	"github.com/gorilla/websocket"
+	"github.com/ipiao/simpleleaf/log"
 )
 
 type WSClient struct {
@@ -39,29 +39,29 @@ func (client *WSClient) init() {
 
 	if client.ConnNum <= 0 {
 		client.ConnNum = 1
-		log.Printf("invalid ConnNum, reset to %v\n", client.ConnNum)
+		log.Releasef("invalid ConnNum, reset to %v\n", client.ConnNum)
 	}
 	if client.ConnectInterval <= 0 {
 		client.ConnectInterval = 3 * time.Second
-		log.Printf("invalid ConnectInterval, reset to %v\n", client.ConnectInterval)
+		log.Releasef("invalid ConnectInterval, reset to %v\n", client.ConnectInterval)
 	}
 	if client.PendingWriteNum <= 0 {
 		client.PendingWriteNum = 100
-		log.Printf("invalid PendingWriteNum, reset to %v\n", client.PendingWriteNum)
+		log.Releasef("invalid PendingWriteNum, reset to %v\n", client.PendingWriteNum)
 	}
 	if client.MaxMsgLen <= 0 {
 		client.MaxMsgLen = 4096
-		log.Printf("invalid MaxMsgLen, reset to %v\n", client.MaxMsgLen)
+		log.Releasef("invalid MaxMsgLen, reset to %v\n", client.MaxMsgLen)
 	}
 	if client.HandshakeTimeout <= 0 {
 		client.HandshakeTimeout = 10 * time.Second
-		log.Printf("invalid HandshakeTimeout, reset to %v\n", client.HandshakeTimeout)
+		log.Releasef("invalid HandshakeTimeout, reset to %v\n", client.HandshakeTimeout)
 	}
 	if client.NewAgent == nil {
-		log.Fatal("NewAgent must not be nil\n")
+		log.Fatalf("NewAgent must not be nil\n")
 	}
 	if client.conns != nil {
-		log.Fatal("client is running\n")
+		log.Fatalf("client is running\n")
 	}
 
 	client.conns = make(WebsocketConnSet)
@@ -78,7 +78,7 @@ func (client *WSClient) dial() *websocket.Conn {
 			return conn
 		}
 
-		log.Printf("connect to %v error: %v\n", client.Addr, err)
+		log.Releasef("connect to %v error: %v\n", client.Addr, err)
 		time.Sleep(client.ConnectInterval)
 		continue
 	}

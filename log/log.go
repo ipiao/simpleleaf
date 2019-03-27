@@ -149,15 +149,15 @@ func Debugf(format string, a ...interface{}) {
 }
 
 func Releasef(format string, a ...interface{}) {
-	gLogger.Debugf(format, a...)
+	gLogger.Releasef(format, a...)
 }
 
 func Errorf(format string, a ...interface{}) {
-	gLogger.Debugf(format, a...)
+	gLogger.Errorf(format, a...)
 }
 
 func Fatalf(format string, a ...interface{}) {
-	gLogger.Debugf(format, a...)
+	gLogger.Fatalf(format, a...)
 }
 
 func Close() {
