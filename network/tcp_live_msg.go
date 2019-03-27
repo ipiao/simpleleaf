@@ -21,10 +21,6 @@ type HeadUnit struct {
 	Extral       uint64
 }
 
-// func (p *HeadUnit) String() string {
-// 	return fmt.Sprintf()
-// }
-
 func (p *HeadUnit) Encode() ([]byte, error) {
 	nBytesOut := make([]byte, 24)
 	nBytesOut[0] = p.From
