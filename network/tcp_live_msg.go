@@ -3,7 +3,6 @@ package network
 import (
 	"encoding/binary"
 	"errors"
-	"fmt"
 	"io"
 	"math"
 )
@@ -44,10 +43,6 @@ func (p *HeadUnit) Decode(nByteIn []byte) {
 	p.Extral = binary.LittleEndian.Uint64(nByteIn[16:24])
 }
 
-func (p *HeadUnit) Log() {
-	fmt.Println(" form = ", p.Form, " type = ", p.CodecType, " msglen = ", p.Msglen, " msgid ", p.Msgid, "version = ", p.Version, "clientExtral = ", p.ClientExtral, " extral = ", p.Extral)
-}
-
 type MsgParser struct {
 	lenMsgLen    int
 	minMsgLen    uint32
@@ -61,7 +56,6 @@ func NewLiveMsgParser() *MsgParser {
 	p.minMsgLen = 1
 	p.maxMsgLen = 10240
 	p.littleEndian = true
-	//fmt.Println( "new live msg parser~~~~~~~~~~" )
 	return p
 }
 
