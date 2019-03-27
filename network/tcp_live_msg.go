@@ -12,21 +12,25 @@ import (
 // --------------
 
 type HeadUnit struct {
-	Form         uint8
+	From         uint8
 	CodecType    uint8
-	Msglen       uint32
-	Msgid        uint32
+	MsgLen       uint32
+	MsgID        uint32
 	Version      uint16
 	ClientExtral uint32
 	Extral       uint64
 }
 
+// func (p *HeadUnit) String() string {
+// 	return fmt.Sprintf()
+// }
+
 func (p *HeadUnit) Encode() ([]byte, error) {
 	nBytesOut := make([]byte, 24)
-	nBytesOut[0] = p.Form
+	nBytesOut[0] = p.From
 	nBytesOut[1] = p.CodecType
-	binary.LittleEndian.PutUint32(nBytesOut[2:6], p.Msglen)
-	binary.LittleEndian.PutUint32(nBytesOut[6:10], p.Msgid)
+	binary.LittleEndian.PutUint32(nBytesOut[2:6], p.MsgLen)
+	binary.LittleEndian.PutUint32(nBytesOut[6:10], p.MsgID)
 	binary.LittleEndian.PutUint16(nBytesOut[10:12], p.Version)
 	binary.LittleEndian.PutUint32(nBytesOut[12:16], p.ClientExtral)
 	binary.LittleEndian.PutUint64(nBytesOut[16:24], p.Extral)
@@ -34,10 +38,10 @@ func (p *HeadUnit) Encode() ([]byte, error) {
 }
 
 func (p *HeadUnit) Decode(nByteIn []byte) {
-	p.Form = nByteIn[0]
+	p.From = nByteIn[0]
 	p.CodecType = nByteIn[1]
-	p.Msglen = binary.LittleEndian.Uint32(nByteIn[2:6])
-	p.Msgid = binary.LittleEndian.Uint32(nByteIn[6:10])
+	p.MsgLen = binary.LittleEndian.Uint32(nByteIn[2:6])
+	p.MsgID = binary.LittleEndian.Uint32(nByteIn[6:10])
 	p.Version = binary.LittleEndian.Uint16(nByteIn[10:12])
 	p.ClientExtral = binary.LittleEndian.Uint32(nByteIn[12:16])
 	p.Extral = binary.LittleEndian.Uint64(nByteIn[16:24])
@@ -104,23 +108,7 @@ func (p *MsgParser) Read(conn *TCPConn) ([]byte, error) {
 	nUnit := &HeadUnit{}
 	nUnit.Decode(bufMsgHead)
 	// parse len
-	var msgLen uint32 = nUnit.Msglen
-	//switch p.lenMsgLen {
-	//case 1:
-	//	msgLen = uint32(bufMsgLen[0])
-	//case 2:
-	//	if p.littleEndian {
-	//		msgLen = uint32(binary.LittleEndian.Uint16(bufMsgLen))
-	//	} else {
-	//		msgLen = uint32(binary.BigEndian.Uint16(bufMsgLen))
-	//	}
-	//case 4:
-	//	if p.littleEndian {
-	//		msgLen = binary.LittleEndian.Uint32(bufMsgLen)
-	//	} else {
-	//		msgLen = binary.BigEndian.Uint32(bufMsgLen)
-	//	}
-	//}
+	var msgLen uint32 = nUnit.MsgLen
 	// check len
 	if msgLen > math.MaxUint32 {
 		return nil, errors.New("message too long")
@@ -135,7 +123,6 @@ func (p *MsgParser) Read(conn *TCPConn) ([]byte, error) {
 			return nil, err
 		}
 	}
-
 	copy(msgData[0:24], bufMsgHead)
 	return msgData, nil
 }
