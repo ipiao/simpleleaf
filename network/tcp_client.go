@@ -25,7 +25,11 @@ type TCPClient struct {
 	MinMsgLen    uint32
 	MaxMsgLen    uint32
 	LittleEndian bool
-	msgParser    *MsgParser
+	msgParser    MsgParserI
+}
+
+func (client *TCPClient) SetMsgParser(p MsgParserI) {
+	client.msgParser = p
 }
 
 func (client *TCPClient) Start() {
@@ -64,10 +68,12 @@ func (client *TCPClient) init() {
 	client.closeFlag = false
 
 	// msg parser
-	msgParser := NewLiveMsgParser()
-	msgParser.SetMsgLen(client.LenMsgLen, client.MinMsgLen, client.MaxMsgLen)
-	msgParser.SetByteOrder(client.LittleEndian)
-	client.msgParser = msgParser
+	if client.msgParser == nil {
+		msgParser := NewMsgParser()
+		msgParser.SetMsgLen(client.LenMsgLen, client.MinMsgLen, client.MaxMsgLen)
+		msgParser.SetByteOrder(client.LittleEndian)
+		client.msgParser = msgParser
+	}
 }
 
 func (client *TCPClient) dial() net.Conn {
