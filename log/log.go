@@ -15,7 +15,6 @@ type Logger interface {
 	Infof(format string, a ...interface{})
 	Errorf(format string, a ...interface{})
 	Fatalf(format string, a ...interface{})
-	Close()
 }
 
 // levels
@@ -158,8 +157,4 @@ func Errorf(format string, a ...interface{}) {
 
 func Fatalf(format string, a ...interface{}) {
 	gLogger.Fatalf(format, a...)
-}
-
-func Close() {
-	gLogger.Close()
 }
