@@ -40,11 +40,11 @@ func (server *TCPServer) init() {
 
 	if server.MaxConnNum <= 0 {
 		server.MaxConnNum = 100
-		log.Releasef("invalid MaxConnNum, reset to %v", server.MaxConnNum)
+		log.Infof("invalid MaxConnNum, reset to %v", server.MaxConnNum)
 	}
 	if server.PendingWriteNum <= 0 {
 		server.PendingWriteNum = 100
-		log.Releasef("invalid PendingWriteNum, reset to %v", server.PendingWriteNum)
+		log.Infof("invalid PendingWriteNum, reset to %v", server.PendingWriteNum)
 	}
 	if server.NewAgent == nil {
 		log.Fatalf("NewAgent must not be nil")
@@ -79,7 +79,7 @@ func (server *TCPServer) run() {
 				if max := 1 * time.Second; tempDelay > max {
 					tempDelay = max
 				}
-				log.Releasef("accept error: %v; retrying in %v", err, tempDelay)
+				log.Infof("accept error: %v; retrying in %v", err, tempDelay)
 				time.Sleep(tempDelay)
 				continue
 			}

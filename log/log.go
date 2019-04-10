@@ -12,7 +12,7 @@ import (
 
 type Logger interface {
 	Debugf(format string, a ...interface{})
-	Releasef(format string, a ...interface{})
+	Infof(format string, a ...interface{})
 	Errorf(format string, a ...interface{})
 	Fatalf(format string, a ...interface{})
 	Close()
@@ -20,17 +20,17 @@ type Logger interface {
 
 // levels
 const (
-	debugLevel   = 0
-	releaseLevel = 1
-	errorLevel   = 2
-	fatalLevel   = 3
+	debugLevel = 0
+	infoLevel  = 1
+	errorLevel = 2
+	fatalLevel = 3
 )
 
 const (
-	printDebugLevel   = "[debug  ] "
-	printReleaseLevel = "[release] "
-	printErrorLevel   = "[error  ] "
-	printFatalLevel   = "[fatal  ] "
+	printDebugLevel   = "[debug] "
+	printReleaseLevel = "[info ] "
+	printErrorLevel   = "[error] "
+	printFatalLevel   = "[fatal] "
 )
 
 type stdLogger struct {
@@ -46,7 +46,7 @@ func New(strLevel string, pathname string, flag int) (*stdLogger, error) {
 	case "debug":
 		level = debugLevel
 	case "release":
-		level = releaseLevel
+		level = infoLevel
 	case "error":
 		level = errorLevel
 	case "fatal":
@@ -119,8 +119,8 @@ func (logger *stdLogger) Debugf(format string, a ...interface{}) {
 	logger.doPrintf(debugLevel, printDebugLevel, format, a...)
 }
 
-func (logger *stdLogger) Releasef(format string, a ...interface{}) {
-	logger.doPrintf(releaseLevel, printReleaseLevel, format, a...)
+func (logger *stdLogger) Infof(format string, a ...interface{}) {
+	logger.doPrintf(infoLevel, printReleaseLevel, format, a...)
 }
 
 func (logger *stdLogger) Errorf(format string, a ...interface{}) {
@@ -148,8 +148,8 @@ func Debugf(format string, a ...interface{}) {
 	gLogger.Debugf(format, a...)
 }
 
-func Releasef(format string, a ...interface{}) {
-	gLogger.Releasef(format, a...)
+func Infof(format string, a ...interface{}) {
+	gLogger.Infof(format, a...)
 }
 
 func Errorf(format string, a ...interface{}) {
