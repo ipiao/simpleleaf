@@ -3,6 +3,7 @@ package network
 import (
 	"net"
 	"sync"
+	"time"
 
 	"github.com/ipiao/simpleleaf/log"
 )
@@ -93,8 +94,18 @@ func (tcpConn *TCPConn) Write(b []byte) {
 	tcpConn.doWrite(b)
 }
 
+func (tcpConn *TCPConn) WriteTimeout(b []byte, d time.Duration) {
+	tcpConn.conn.SetWriteDeadline(time.Now().Add(d))
+	tcpConn.Write(b)
+}
+
 func (tcpConn *TCPConn) Read(b []byte) (int, error) {
 	return tcpConn.conn.Read(b)
+}
+
+func (tcpConn *TCPConn) ReadTimeout(b []byte, d time.Duration) (int, error) {
+	tcpConn.conn.SetReadDeadline(time.Now().Add(d))
+	return tcpConn.Read(b)
 }
 
 func (tcpConn *TCPConn) LocalAddr() net.Addr {
